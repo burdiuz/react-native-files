@@ -1,0 +1,10 @@
+{
+  "name": "@actualwave/react-native-files",
+  "version": "0.0.1",
+  "private": true,
+  "main": "source/index.js",
+  "dependencies": {
+    "@actualwave/is-function": "file:../RNTestApp/node_modules/@actualwave/is-function",
+    "react-native-fs": "^2.12.0"
+  }
+}
