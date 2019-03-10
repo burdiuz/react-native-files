@@ -48,7 +48,7 @@ class Directory extends Path {
     const exists = await this.has(name);
 
     if (!exists) {
-      return Promise.reject(`"${name}" in "${this._path}" does not exist.`);
+      throw new Error(`"${name}" in "${this._path}" does not exist.`);
     }
 
     const path = this.getChildPath(name);
@@ -63,7 +63,7 @@ class Directory extends Path {
       return Directory.get(stat);
     }
 
-    return Promise.reject('Path is not a file or directory.');
+    throw new Error('Path is not a file or directory.');
   }
 
   async getFile(name) {
@@ -74,7 +74,7 @@ class Directory extends Path {
       stat = await RNFS.stat(path);
 
       if (!stat.isFile()) {
-        return Promise.reject(`Path "${path}" is not a file.`);
+        throw new Error(`Path "${path}" is not a file.`);
       }
     } catch (error) {
       // does not exist, ok
@@ -91,7 +91,7 @@ class Directory extends Path {
       stat = await RNFS.stat(path);
 
       if (!stat.isDirectory()) {
-        return Promise.reject(`Path "${path}" is not a directory.`);
+        throw new Error(`Path "${path}" is not a directory.`);
       }
     } catch (error) {
       // does not exist, ok
@@ -112,7 +112,7 @@ class Directory extends Path {
     const dir = new Directory(info);
     await dir._update;
 
-    if(createIfNotExists && !dir.exists()) {
+    if (createIfNotExists && !dir.exists()) {
       await dir.create();
     }
 
