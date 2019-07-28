@@ -1,7 +1,8 @@
 import RNFS from 'react-native-fs';
 
-import Path, { DEFAULT_ENCODING } from './Path';
+import Path, { DEFAULT_ENCODING, DIRECTORY_MODE } from './Path';
 import File from './File';
+import { getFromPathIfExists } from './utils';
 
 class Directory extends Path {
   isFile() {
@@ -27,7 +28,7 @@ class Directory extends Path {
       return;
     }
 
-    await RNFS.mkdir(this.path());
+    await RNFS.mkdir(this.path(), { mode: DIRECTORY_MODE });
 
     return this.update();
   }
@@ -44,26 +45,10 @@ class Directory extends Path {
     return RNFS.exists(this.getChildPath(name));
   }
 
-  async getChildIfExist(name) {
-    const exists = await this.has(name);
-
-    if (!exists) {
-      throw new Error(`"${name}" in "${this._path}" does not exist.`);
-    }
-
+  getChildIfExist(name) {
     const path = this.getChildPath(name);
-    // FIXME works on files only
-    const stat = await RNFS.stat(path);
 
-    if (stat.isFile()) {
-      return File.get(stat);
-    }
-
-    if (stat.isDirectory()) {
-      return Directory.get(stat);
-    }
-
-    throw new Error('Path is not a file or directory.');
+    return getFromPathIfExists(path);
   }
 
   async getFile(name) {
@@ -122,7 +107,7 @@ class Directory extends Path {
   static async create(info) {
     const dir = new Directory(info, false);
 
-    await RNFS.mkdir(dir.path());
+    await RNFS.mkdir(dir.path(), { mode: DIRECTORY_MODE });
 
     return dir.update();
   }

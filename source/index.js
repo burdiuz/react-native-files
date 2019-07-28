@@ -14,6 +14,8 @@ import Path, {
 import File from './File';
 import Directory, { readDir } from './Directory';
 
+export * from './utils';
+
 const DOCUMENT_DIRECTORY_PATH = RNFS.DocumentDirectoryPath;
 
 const EXTERNAL_DIRECTORY_PATH = RNFS.ExternalDirectoryPath;

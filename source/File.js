@@ -1,7 +1,7 @@
 import RNFS from 'react-native-fs';
 import { isFunction } from '@actualwave/is-function';
 
-import Path, { DEFAULT_ENCODING } from './Path';
+import Path, { DEFAULT_ENCODING, FILE_MODE } from './Path';
 import Directory from './Directory';
 
 class File extends Path {
@@ -36,7 +36,7 @@ class File extends Path {
       string = String(content);
     }
 
-    return RNFS.writeFile(this._path, string, encoding);
+    return RNFS.writeFile(this._path, string, { encoding, mode: FILE_MODE });
   }
 
   async append(content, encoding = DEFAULT_ENCODING) {
@@ -49,25 +49,6 @@ class File extends Path {
     }
 
     return RNFS.appendFile(this._path, string, encoding);
-  }
-
-  async copyTo(path) {
-    await RNFS.copyFile(this._path, path);
-
-    return File.get(path);
-  }
-
-  async moveTo(path, applyToThis = false) {
-    await RNFS.copyFile(this._path, path);
-
-    if (applyToThis) {
-      this._path = path;
-      this.update();
-
-      return this;
-    }
-
-    return File.get(path);
   }
 
   static get(info) {

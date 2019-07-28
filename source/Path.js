@@ -2,6 +2,12 @@ import RNFS from 'react-native-fs';
 
 export const DEFAULT_ENCODING = 'utf8';
 
+// File mode -rw-rw-rw-
+export const FILE_MODE = 0x1b6;
+
+// File mode drwxrwxrwx
+export const DIRECTORY_MODE = 0x3ff;
+
 export const HASH_MD5 = 'md5';
 export const HASH_SHA1 = 'sha1';
 export const HASH_SHA224 = 'sha224';
@@ -130,6 +136,31 @@ class Path {
 
   touch(mtime = undefined, ctime = undefined) {
     return RNFS.touch(this._path, mtime, ctime);
+  }
+
+  async copyTo(path) {
+    const {
+      constructor: { get: factory },
+    } = this;
+    await RNFS.copyFile(this._path, path);
+
+    return factory(path);
+  }
+
+  async moveTo(path, applyToThis = false) {
+    const {
+      constructor: { get: factory },
+    } = this;
+    await RNFS.moveFile(this._path, path);
+
+    if (applyToThis) {
+      this._path = path;
+      await this.update();
+
+      return this;
+    }
+
+    return factory(path);
   }
 
   static get(info) {
