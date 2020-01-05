@@ -4,7 +4,7 @@
   "private": true,
   "main": "source/index.js",
   "dependencies": {
-    "@actualwave/is-function": "file:../RNTestApp/node_modules/@actualwave/is-function",
+    "@actualwave/is-function": "^0.0.1",
     "react-native-fs": "^2.12.0"
   }
 }
